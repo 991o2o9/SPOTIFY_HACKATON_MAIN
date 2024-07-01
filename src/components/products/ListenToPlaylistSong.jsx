@@ -136,7 +136,7 @@ const ListenToPlaylistSong = () => {
 								<img
 									hidden='true'
 									alt='clock'
-									src='https://placehold.co/16x16'
+									src='https://media.pitchfork.com/photos/5929c3e8eb335119a49ed80f/1:1/w_1024%2Cc_limit/31d2b6fd.jpg'
 								/>
 							</th>
 						</tr>
@@ -148,7 +148,10 @@ const ListenToPlaylistSong = () => {
 								<FaPlay className='play-playlist-song' />
 							</Link>
 							<td className='image-cell'>
-								<img src='https://placehold.co/40' alt='album cover' />
+								<img
+									src='https://www.thesun.co.uk/wp-content/uploads/2023/10/MF-ISHOWSPEED-OFFPLAT.jpg?strip=all&quality=100&w=1080&h=1080&crop=1'
+									alt='album cover'
+								/>
 								<div>
 									<div className='title'>The Less I Know The Better</div>
 									<div className='artist'>Tame Impala</div>
@@ -161,7 +164,10 @@ const ListenToPlaylistSong = () => {
 						<tr>
 							<td>2</td>
 							<td className='image-cell'>
-								<img src='https://placehold.co/40' alt='album cover' />
+								<img
+									src='https://yt3.googleusercontent.com/VGAq7wYyHcfij4jNR-wNGxxGTK1rnSt4gcn0UTxfuFzLJytFq8dT1-EbE8nqGkAgd-U__pu7=s900-c-k-c0x00ffffff-no-rj'
+									alt='album cover'
+								/>
 								<div>
 									<div className='title'>Imagination</div>
 									<div className='artist'>Foster The People</div>
@@ -174,7 +180,10 @@ const ListenToPlaylistSong = () => {
 						<tr>
 							<td>3</td>
 							<td className='image-cell'>
-								<img src='https://placehold.co/40' alt='album cover' />
+								<img
+									src='https://m.media-amazon.com/images/M/MV5BMTcwMzMxOTg2NF5BMl5BanBnXkFtZTgwMjA2ODExNjE@._V1_FMjpg_UX1000_.jpg'
+									alt='album cover'
+								/>
 								<div>
 									<div className='title'>Compass</div>
 									<div className='artist'>The Neighbourhood</div>

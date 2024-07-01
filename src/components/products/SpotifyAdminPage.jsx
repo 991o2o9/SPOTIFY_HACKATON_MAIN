@@ -16,7 +16,6 @@ const SpotifyAdminPage = () => {
 		newSong.append('song_text', song_text)
 		newSong.append('song_image', song_image)
 		newSong.append('song', song)
-		newSong.append('author', author)
 		newSong.append('genre_name', genre_name)
 		newSong.append('author_nickname', author_nickname)
 
@@ -25,30 +24,15 @@ const SpotifyAdminPage = () => {
 	}
 
 	const [song_name, setSong_name] = useState('')
-	const [id, setId] = useState(0)
 	const [description, setDescription] = useState('')
 	const [song_text, setSong_text] = useState('')
 	const [song_image, setSong_image] = useState(null)
 	const [song, setSong] = useState(null)
-	const [author, setAuthor] = useState(0)
 	const [genre_name, setGenre_name] = useState('')
 	const [author_nickname, setAuthor_nickname] = useState('')
-
 	return (
 		<div style={styles.spotifyAdminPage}>
 			<form style={styles.adminForm} onSubmit={handleClick}>
-				<div style={styles.formGroup}>
-					<label htmlFor='song_name' style={styles.label}>
-						Song Id
-					</label>
-					<input
-						type='number'
-						id='songId'
-						name='songId'
-						style={styles.input}
-						onChange={e => setId(e.target.value)}
-					/>
-				</div>
 				<div style={styles.formGroup}>
 					<label htmlFor='song_name' style={styles.label}>
 						Song Name
@@ -105,18 +89,6 @@ const SpotifyAdminPage = () => {
 						name='song'
 						style={styles.input}
 						onChange={e => setSong(e.target.files[0])}
-					/>
-				</div>
-				<div style={styles.formGroup}>
-					<label htmlFor='author' style={styles.label}>
-						Author
-					</label>
-					<input
-						type='text'
-						id='author'
-						name='author'
-						style={styles.input}
-						onChange={e => setAuthor(e.target.value)}
 					/>
 				</div>
 				<div style={styles.formGroup}>

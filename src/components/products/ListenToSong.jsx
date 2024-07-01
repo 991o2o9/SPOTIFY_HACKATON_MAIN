@@ -3,21 +3,27 @@ import { FaPause, FaPlay } from 'react-icons/fa'
 import { Link, useParams } from 'react-router-dom'
 import { useProduct } from '../context/ProductContextProvider'
 import { FaHeartCirclePlus } from 'react-icons/fa6'
+import { MdDelete } from 'react-icons/md'
+import { useAuth } from '../context/AuthContextProvider'
+import { RiEdit2Fill } from 'react-icons/ri'
+import ColorThief from 'colorthief'
+import FooterMenuSong from './FooterMenuSong'
 
 const ListenToSong = () => {
 	const { id } = useParams()
-	const { songs, getSongs } = useProduct()
-
+	const { currentUser } = useAuth()
+	const { songs, getSongs, deleteSong, editSong } = useProduct()
 	const song = songs.find(song => song.id === parseInt(id))
-
-	useEffect(() => {
-		getSongs()
-	}, [])
 
 	const audioRef = useRef(null)
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [currentTime, setCurrentTime] = useState(0)
 	const [duration, setDuration] = useState(0)
+	const [dominantColor, setDominantColor] = useState([0, 0, 0])
+
+	useEffect(() => {
+		getSongs()
+	}, [getSongs])
 
 	useEffect(() => {
 		const audio = audioRef.current
@@ -39,16 +45,28 @@ const ListenToSong = () => {
 				audio.removeEventListener('timeupdate', updateTime)
 			}
 		}
-	}, [audioRef.current])
+	}, [audioRef])
 
-	// Форматирование времени в mm:ss
+	useEffect(() => {
+		if (song && song.song_image) {
+			const image = new Image()
+			image.crossOrigin = 'Anonymous'
+			image.src = song.song_image
+
+			image.onload = () => {
+				const colorThief = new ColorThief()
+				const dominantColor = colorThief.getColor(image)
+				setDominantColor(dominantColor)
+			}
+		}
+	}, [song])
+
 	const formatTime = time => {
 		const minutes = Math.floor(time / 60)
 		const seconds = Math.floor(time % 60)
 		return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
 	}
 
-	// Обработчик нажатия кнопки воспроизведения/паузы
 	const togglePlayPause = () => {
 		const audio = audioRef.current
 		if (isPlaying) {
@@ -59,11 +77,16 @@ const ListenToSong = () => {
 		setIsPlaying(prevState => !prevState)
 	}
 
-	// Обработчик изменения позиции ползунка
 	const handleSliderChange = event => {
 		const audio = audioRef.current
-		audio.currentTime = Number(event.target.value) // Приведение к числу
+		audio.currentTime = Number(event.target.value)
 		setCurrentTime(audio.currentTime)
+	}
+
+	const rgbColor = `rgb(${dominantColor.join(',')})`
+	const gradientStyle = {
+		background: `linear-gradient(135deg, ${rgbColor} 0%, #000000 100%)`,
+		color: '#ffffff',
 	}
 
 	if (!song) {
@@ -72,7 +95,7 @@ const ListenToSong = () => {
 
 	return (
 		<div>
-			<div className='listen-to-page'>
+			<div style={gradientStyle} className='listen-to-page'>
 				<div className='song-img'>
 					<img src={song.song_image} alt={song.song_name} />
 				</div>
@@ -94,8 +117,6 @@ const ListenToSong = () => {
 							<li className='album-name'>
 								<span>{song.genre_name}</span>
 							</li>
-							{/* <li className='song-duration'>2.15</li>
-							<li className='amount-of-listened'>1 107 343 434</li> */}
 						</ul>
 					</div>
 				</div>
@@ -138,8 +159,23 @@ const ListenToSong = () => {
 							className='fav-btn'
 						/>
 					</Link>
+					{currentUser ? (
+						<Link onClick={() => deleteSong(song.song_name)}>
+							<MdDelete style={{ paddingLeft: '25px' }} className='fav-btn' />
+						</Link>
+					) : null}
+					{currentUser ? (
+						<Link to={`/edit/${song.slug}`} onClick={() => editSong(song.slug)}>
+							<RiEdit2Fill
+								style={{ paddingLeft: '25px' }}
+								className='fav-btn'
+							/>
+						</Link>
+					) : null}
 				</div>
 			</div>
+
+			{isPlaying && <FooterMenuSong song={song} />}
 		</div>
 	)
 }

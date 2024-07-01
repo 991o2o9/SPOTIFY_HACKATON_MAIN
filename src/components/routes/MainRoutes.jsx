@@ -11,6 +11,7 @@ import Register from '../auth/Register'
 import UserPage from '../../pages/UserPage'
 import Support from '../products/Support'
 import SpotifyAdminPage from '../products/SpotifyAdminPage'
+import EditInfoAboutSong from '../products/EditInfoAboutSong'
 
 const MainRoutes = () => {
 	return (
@@ -19,6 +20,7 @@ const MainRoutes = () => {
 			<Route path='/search' element={<HomePage />} />
 			<Route path='/premiumPage' element={<Premium />} />
 			<Route path='/song/:id' element={<ListenToSong />} />
+			<Route path='/edit/:slug' element={<EditInfoAboutSong />} />
 			<Route path='/about' element={<About />} />
 			<Route path='/playlist' element={<ListenToPlaylistSong />} />
 			<Route path='/login' element={<Login />} />

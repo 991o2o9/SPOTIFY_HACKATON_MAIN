@@ -32,7 +32,7 @@ const ProductContextProvider = ({ children }) => {
 		const tokens = JSON.parse(localStorage.getItem('tokens'))
 		if (!tokens || !tokens.access) {
 			console.error('No tokens found')
-			return {} // Или другой способ обработки отсутствия токенов
+			return {}
 		}
 		const Authorization = `Bearer ${tokens.access.access}`
 		return {
@@ -47,7 +47,6 @@ const ProductContextProvider = ({ children }) => {
 			navigate('/')
 		} catch (error) {
 			console.log('Error adding song:', error)
-			// Добавьте уведомление для пользователя об ошибке
 		}
 	}
 
@@ -61,7 +60,6 @@ const ProductContextProvider = ({ children }) => {
 			})
 		} catch (error) {
 			console.log('Error fetching songs:', error)
-			// Добавьте уведомление для пользователя об ошибке
 		}
 	}
 
@@ -69,10 +67,10 @@ const ProductContextProvider = ({ children }) => {
 	const deleteSong = async slug => {
 		try {
 			await axios.delete(`${API}/song/delete_song/${slug}/`, getConfig())
-			getSongs() // Обновление списка песен после удаления
+			getSongs()
+			navigate('/')
 		} catch (error) {
 			console.log('Error deleting song:', error)
-			// Добавьте уведомление для пользователя об ошибке
 		}
 	}
 
@@ -89,7 +87,6 @@ const ProductContextProvider = ({ children }) => {
 			})
 		} catch (error) {
 			console.log('Error fetching one song:', error)
-			// Добавьте уведомление для пользователя об ошибке
 		}
 	}
 
@@ -101,10 +98,8 @@ const ProductContextProvider = ({ children }) => {
 				newSong,
 				getConfig()
 			)
-			navigate('/') // Перемещаемся на другую страницу после редактирования
 		} catch (error) {
 			console.log('Error editing song:', error)
-			// Добавьте уведомление для пользователя об ошибке
 		}
 	}
 

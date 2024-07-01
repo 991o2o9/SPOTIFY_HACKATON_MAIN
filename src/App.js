@@ -5,6 +5,7 @@ import Navbar from './HomePage/Navbar'
 import MainRoutes from './components/routes/MainRoutes'
 import Footerrez from './HomePage/Footerrez'
 import NavbarForSearch from './HomePage/NavbarForSearch'
+import FooterMenuSong from './components/products/FooterMenuSong'
 
 const App = () => {
 	const location = useLocation()
