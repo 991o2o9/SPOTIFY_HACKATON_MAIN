@@ -1,11 +1,19 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FaHome, FaSearch, FaMusic, FaHeart, FaDoorOpen } from 'react-icons/fa'
+import { FaHome, FaSearch, FaDoorOpen } from 'react-icons/fa'
 import { MdOutlineLibraryMusic } from 'react-icons/md'
 import { BsPlusLg } from 'react-icons/bs'
 import { CiSearch } from 'react-icons/ci'
+import SideBarPLaylistCards from './SideBarPLaylistCards'
 
 const SideBar = () => {
+	const [playlists, setPlaylists] = useState([])
+
+	useEffect(() => {
+		const savedPlaylists = JSON.parse(localStorage.getItem('playlists')) || []
+		setPlaylists(savedPlaylists)
+	}, [])
+
 	return (
 		<div className='side'>
 			<div className='logo'>
@@ -42,11 +50,11 @@ const SideBar = () => {
 
 			<div className='actions'>
 				<div className='library-of-playlist'>
-					<Link>
+					<Link to='/library'>
 						<FaDoorOpen className='playlist-pic' />
 						<span>Your library</span>
 					</Link>
-					<Link>
+					<Link to='/createPlayList'>
 						<BsPlusLg className='create-fckg-playlist' />
 					</Link>
 				</div>
@@ -56,19 +64,9 @@ const SideBar = () => {
 				</div>
 
 				<div className='cards-with-playlist'>
-					<Link to={'/playlist'} style={{ textDecoration: 'none' }}>
-						<div className='locating-cards'>
-							<img
-								src='https://i.redd.it/eueplomhfqqc1.jpeg'
-								alt=''
-								className='playlist-photo'
-							/>
-							<div className='description-info'>
-								<span>AHH SONGS</span>
-								<span>Плейлист ● Amin</span>
-							</div>
-						</div>
-					</Link>
+					{playlists.map((elem, index) => (
+						<SideBarPLaylistCards key={index} elem={elem} />
+					))}
 				</div>
 			</div>
 		</div>

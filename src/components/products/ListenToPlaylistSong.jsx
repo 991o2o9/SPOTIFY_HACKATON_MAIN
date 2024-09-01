@@ -1,75 +1,88 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { FaPause, FaPlay } from 'react-icons/fa'
-import { FaHeartCirclePlus } from 'react-icons/fa6'
+import React, { useEffect, useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { useProduct } from '../context/ProductContextProvider'
 import { MdDelete } from 'react-icons/md'
-import { Link } from 'react-router-dom'
+import { TiDelete } from 'react-icons/ti'
 
 const ListenToPlaylistSong = () => {
-	const audioRef = useRef(null)
-	const [isPlaying, setIsPlaying] = useState(false)
-	const [currentTime, setCurrentTime] = useState(0)
-	const [duration, setDuration] = useState(0)
+	const { id } = useParams()
+	const navigate = useNavigate()
+	const { getSongs, songs } = useProduct()
+	const [playlist, setPlaylist] = useState(null)
+	const [durations, setDurations] = useState([])
 
 	useEffect(() => {
-		const audio = audioRef.current
+		const savedPlaylists = JSON.parse(localStorage.getItem('playlists')) || []
+		const selectedPlaylist = savedPlaylists.find(p => p.id === id)
+		setPlaylist(selectedPlaylist)
+	}, [id])
 
-		const updateDuration = () => {
-			setDuration(audio.duration)
+	useEffect(() => {
+		getSongs()
+	}, [getSongs])
+
+	useEffect(() => {
+		if (playlist && playlist.songs.length > 0) {
+			// Фильтруем песни, чтобы оставить только те, что есть в API
+			const filteredSongs = playlist.songs.filter(song =>
+				songs.some(apiSong => apiSong.id === song.id)
+			)
+			const audioElements = filteredSongs.map(song => {
+				const audio = new Audio(song.song)
+				return new Promise(resolve => {
+					audio.addEventListener('loadedmetadata', () => {
+						resolve(audio.duration)
+					})
+				})
+			})
+
+			Promise.all(audioElements).then(durations => {
+				setDurations(durations)
+			})
 		}
+	}, [playlist, songs])
 
-		const updateTime = () => {
-			setCurrentTime(audio.currentTime)
-		}
-
-		audio.addEventListener('loadedmetadata', updateDuration)
-		audio.addEventListener('timeupdate', updateTime)
-
-		return () => {
-			audio.removeEventListener('loadedmetadata', updateDuration)
-			audio.removeEventListener('timeupdate', updateTime)
-		}
-	}, [])
-
-	// Форматирование времени в mm:ss
 	const formatTime = time => {
 		const minutes = Math.floor(time / 60)
 		const seconds = Math.floor(time % 60)
 		return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
 	}
 
-	// Обработчик нажатия кнопки воспроизведения/паузы
-	const togglePlayPause = () => {
-		const audio = audioRef.current
-		if (isPlaying) {
-			audio.pause()
-		} else {
-			audio.play()
-		}
-		setIsPlaying(prevState => !prevState)
+	const handleRowClick = songId => {
+		navigate(`/song/${songId}`)
 	}
-	// Обработчик изменения позиции ползунка
-	const handleSliderChange = event => {
-		const audio = audioRef.current
-		audio.currentTime = event.target.value
-		setCurrentTime(audio.currentTime)
+
+	if (!playlist) {
+		return <div>Loading...</div>
 	}
+
+	const filteredSongs = playlist.songs.filter(song =>
+		songs.some(apiSong => apiSong.id === song.id)
+	)
+
 	return (
 		<div>
 			<div className='listen-to-page-playlist'>
+				<div className='listen-to-page-playlist-bgImage'>
+					<img src={playlist.image} alt='' />
+				</div>
 				<div className='song-img'>
-					<img src='https://i.redd.it/eueplomhfqqc1.jpeg' alt='' />
+					<img
+						src={playlist.image || 'https://via.placeholder.com/150'}
+						alt='Playlist Cover'
+					/>
 				</div>
 				<div className='text-info'>
 					<div className='title-of-song'>
-						<span>Playlist</span>
-						<span>Songs that makes you feel wet</span>
+						<span>{playlist.name}</span>
+						<span>{playlist.description || 'No description available'}</span>
 					</div>
 					<div className='other-info-about-song'>
 						<ul className='main-text-ab-song'>
 							<li>
 								<img
 									src='https://f4.bcbits.com/img/a1443982232_65'
-									alt=''
+									alt='Author'
 									className='author-prof-photo'
 								/>
 								<span>Amin</span>
@@ -77,8 +90,7 @@ const ListenToPlaylistSong = () => {
 							<li className='album-name'>
 								<span>2,211 likes</span>
 							</li>
-							<li className='song-duration'>3 songs</li>
-							{/* <li className='amount-of-listened'>1 107 343 434</li> */}
+							<li className='song-duration'>{filteredSongs.length} songs</li>
 						</ul>
 					</div>
 				</div>
@@ -86,43 +98,16 @@ const ListenToPlaylistSong = () => {
 			<div className='play-song-db'>
 				<div className='data-etc'>
 					<ul>
-						<li>
-							<span>7 мая</span>
-						</li>
-						<li>
-							<span>Длительность - {formatTime(duration)} - </span>
-							<span>{formatTime(currentTime)}</span>
-							<div className='slider-shit'>
-								<input
-									type='range'
-									className='track-slider'
-									value={currentTime}
-									max={duration}
-									onChange={handleSliderChange}
-								/>
-							</div>
+						<li className='delete-playlist-icon-main'>
+							<TiDelete className='delete-playlist-icon-child' />
+							<span className='delete-playlist-icon-child-hidden'>
+								Delete playlist
+							</span>
 						</li>
 					</ul>
 				</div>
 			</div>
-			<div className='polsunok'>
-				<audio
-					ref={audioRef}
-					src='https://media.djlunatique.com/2024/06/we-can-go-gyatt-4-gyatt-.mp3'
-				></audio>
-				<div className='controls'>
-					<button className='play-pause-btn' onClick={togglePlayPause}>
-						{isPlaying ? (
-							<FaPause className='icon-play' />
-						) : (
-							<FaPlay className='icon-play' />
-						)}
-					</button>
-					<Link>
-						<MdDelete style={{ paddingLeft: '25px' }} className='fav-btn' />
-					</Link>
-				</div>
-			</div>
+
 			<hr style={{ marginTop: '20px' }} />
 			<div className='table-container'>
 				<table className='table'>
@@ -132,67 +117,25 @@ const ListenToPlaylistSong = () => {
 							<th>Title</th>
 							<th>Album</th>
 							<th>Date added</th>
-							<th>
-								<img
-									hidden='true'
-									alt='clock'
-									src='https://media.pitchfork.com/photos/5929c3e8eb335119a49ed80f/1:1/w_1024%2Cc_limit/31d2b6fd.jpg'
-								/>
-							</th>
+							<th>Duration</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>1</td>
-							<Link>
-								<FaPlay className='play-playlist-song' />
-							</Link>
-							<td className='image-cell'>
-								<img
-									src='https://www.thesun.co.uk/wp-content/uploads/2023/10/MF-ISHOWSPEED-OFFPLAT.jpg?strip=all&quality=100&w=1080&h=1080&crop=1'
-									alt='album cover'
-								/>
-								<div>
-									<div className='title'>The Less I Know The Better</div>
-									<div className='artist'>Tame Impala</div>
-								</div>
-							</td>
-							<td>Currents</td>
-							<td>Jun 25, 2020</td>
-							<td>3:36</td>
-						</tr>
-						<tr>
-							<td>2</td>
-							<td className='image-cell'>
-								<img
-									src='https://yt3.googleusercontent.com/VGAq7wYyHcfij4jNR-wNGxxGTK1rnSt4gcn0UTxfuFzLJytFq8dT1-EbE8nqGkAgd-U__pu7=s900-c-k-c0x00ffffff-no-rj'
-									alt='album cover'
-								/>
-								<div>
-									<div className='title'>Imagination</div>
-									<div className='artist'>Foster The People</div>
-								</div>
-							</td>
-							<td>Imagination</td>
-							<td>Jun 25, 2020</td>
-							<td>4:16</td>
-						</tr>
-						<tr>
-							<td>3</td>
-							<td className='image-cell'>
-								<img
-									src='https://m.media-amazon.com/images/M/MV5BMTcwMzMxOTg2NF5BMl5BanBnXkFtZTgwMjA2ODExNjE@._V1_FMjpg_UX1000_.jpg'
-									alt='album cover'
-								/>
-								<div>
-									<div className='title'>Compass</div>
-									<div className='artist'>The Neighbourhood</div>
-								</div>
-							</td>
-							<td>Hard To Imagine The Neighbourhood Ever...</td>
-							<td>Jun 25, 2020</td>
-							<td>2:47</td>
-						</tr>
+						{filteredSongs.map((song, index) => (
+							<tr key={index} onClick={() => handleRowClick(song.id)}>
+								<td>{index + 1}</td>
+								<td className='image-cell'>
+									<img src={song.song_image} alt='album cover' />
+									<div>
+										<div className='title'>{song.song_name}</div>
+										<div className='artist'>Author</div>
+									</div>
+								</td>
+								<td>Album</td>
+								<td>Today</td>
+								<td>{formatTime(durations[index] || 0)}</td>
+							</tr>
+						))}
 					</tbody>
 				</table>
 			</div>

@@ -1,42 +1,51 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { FaPause, FaPlay } from 'react-icons/fa'
 import { Link, useParams } from 'react-router-dom'
-import { useProduct } from '../context/ProductContextProvider'
-import { FaHeartCirclePlus } from 'react-icons/fa6'
 import { MdDelete } from 'react-icons/md'
-import { useAuth } from '../context/AuthContextProvider'
 import { RiEdit2Fill } from 'react-icons/ri'
-import ColorThief from 'colorthief'
+import { useProduct } from '../context/ProductContextProvider'
+import { useAuth } from '../context/AuthContextProvider'
 import FooterMenuSong from './FooterMenuSong'
+import ProductCard from './ProductCard'
+import PlaylistModal from './PlaylistModal'
+import { FaPause, FaPlay } from 'react-icons/fa'
+import { FaHeartCirclePlus } from 'react-icons/fa6'
 
 const ListenToSong = () => {
 	const { id } = useParams()
 	const { currentUser } = useAuth()
 	const { songs, getSongs, deleteSong, editSong } = useProduct()
-	const song = songs.find(song => song.id === parseInt(id))
-
+	const song = songs.find(song => song.id === parseInt(id, 10))
 	const audioRef = useRef(null)
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [currentTime, setCurrentTime] = useState(0)
 	const [duration, setDuration] = useState(0)
-	const [dominantColor, setDominantColor] = useState([0, 0, 0])
+	const [activeTab, setActiveTab] = useState('description')
+	const [showModal, setShowModal] = useState(false)
+	const [playlists, setPlaylists] = useState([])
 
 	useEffect(() => {
-		getSongs()
-	}, [getSongs])
+		if (songs.length === 0) {
+			console.log('Fetching songs...')
+			getSongs()
+		}
+	}, [songs.length, getSongs])
 
 	useEffect(() => {
 		const audio = audioRef.current
 
-		if (audio) {
-			const updateDuration = () => {
+		const updateDuration = () => {
+			if (audio) {
 				setDuration(audio.duration)
 			}
+		}
 
-			const updateTime = () => {
+		const updateTime = () => {
+			if (audio) {
 				setCurrentTime(audio.currentTime)
 			}
+		}
 
+		if (audio) {
 			audio.addEventListener('loadedmetadata', updateDuration)
 			audio.addEventListener('timeupdate', updateTime)
 
@@ -48,18 +57,10 @@ const ListenToSong = () => {
 	}, [audioRef])
 
 	useEffect(() => {
-		if (song && song.song_image) {
-			const image = new Image()
-			image.crossOrigin = 'Anonymous'
-			image.src = song.song_image
-
-			image.onload = () => {
-				const colorThief = new ColorThief()
-				const dominantColor = colorThief.getColor(image)
-				setDominantColor(dominantColor)
-			}
-		}
-	}, [song])
+		// Fetch playlists from localStorage or backend
+		const storedPlaylists = JSON.parse(localStorage.getItem('playlists')) || []
+		setPlaylists(storedPlaylists)
+	}, [])
 
 	const formatTime = time => {
 		const minutes = Math.floor(time / 60)
@@ -69,24 +70,49 @@ const ListenToSong = () => {
 
 	const togglePlayPause = () => {
 		const audio = audioRef.current
-		if (isPlaying) {
-			audio.pause()
+		if (audio) {
+			if (isPlaying) {
+				audio.pause()
+			} else {
+				audio.play()
+			}
+			setIsPlaying(prevState => !prevState)
 		} else {
-			audio.play()
+			console.error('Audio element not found.')
 		}
-		setIsPlaying(prevState => !prevState)
 	}
 
 	const handleSliderChange = event => {
 		const audio = audioRef.current
-		audio.currentTime = Number(event.target.value)
-		setCurrentTime(audio.currentTime)
+		if (audio) {
+			audio.currentTime = Number(event.target.value)
+			setCurrentTime(audio.currentTime)
+		}
 	}
 
-	const rgbColor = `rgb(${dominantColor.join(',')})`
-	const gradientStyle = {
-		background: `linear-gradient(135deg, ${rgbColor} 0%, #000000 100%)`,
-		color: '#ffffff',
+	const checkSongInPlaylist = (playlist, songId) => {
+		return playlist.songs.some(song => song.id === songId)
+	}
+
+	const handleAddToPlaylist = playlistId => {
+		const updatedPlaylists = playlists.map(playlist => {
+			if (playlist.id === playlistId) {
+				if (checkSongInPlaylist(playlist, song.id)) {
+					alert('Эта песня уже находится в плейлисте.')
+					return playlist
+				}
+				return {
+					...playlist,
+					songs: [...playlist.songs, song],
+				}
+			}
+			return playlist
+		})
+
+		localStorage.setItem('playlists', JSON.stringify(updatedPlaylists))
+		setPlaylists(updatedPlaylists) // Обновляем состояние
+		setShowModal(false)
+		alert(`${song.song_name} добавлена в плейлист!`)
 	}
 
 	if (!song) {
@@ -94,8 +120,18 @@ const ListenToSong = () => {
 	}
 
 	return (
-		<div>
-			<div style={gradientStyle} className='listen-to-page'>
+		<div className='listen-to-song-page-section'>
+			{showModal && (
+				<PlaylistModal
+					playlists={playlists}
+					onClose={() => setShowModal(false)}
+					onSelect={handleAddToPlaylist}
+				/>
+			)}
+			<div className='listen-to-page'>
+				<div className='bgi-listen-to-song-page'>
+					<img src={song.song_image} alt='' />
+				</div>
 				<div className='song-img'>
 					<img src={song.song_image} alt={song.song_name} />
 				</div>
@@ -107,11 +143,6 @@ const ListenToSong = () => {
 					<div className='other-info-about-song'>
 						<ul className='main-text-ab-song'>
 							<li>
-								<img
-									src=''
-									alt={song.author_nickname}
-									className='author-prof-photo'
-								/>
 								<span>{song.author_nickname}</span>
 							</li>
 							<li className='album-name'>
@@ -128,7 +159,10 @@ const ListenToSong = () => {
 							<span>7 мая</span>
 						</li>
 						<li>
-							<span>Длительность - {formatTime(duration)} - </span>
+							<span>
+								Длительность -{' '}
+								{duration ? formatTime(duration) : <span>Загрузка...</span>}
+							</span>
 							<span>{formatTime(currentTime)}</span>
 							<div className='slider-shit'>
 								<input
@@ -153,29 +187,73 @@ const ListenToSong = () => {
 							<FaPlay className='icon-play' />
 						)}
 					</button>
-					<Link>
+					<Link onClick={() => setShowModal(true)}>
 						<FaHeartCirclePlus
 							style={{ paddingLeft: '25px' }}
 							className='fav-btn'
 						/>
 					</Link>
-					{currentUser ? (
-						<Link onClick={() => deleteSong(song.song_name)}>
-							<MdDelete style={{ paddingLeft: '25px' }} className='fav-btn' />
-						</Link>
-					) : null}
-					{currentUser ? (
-						<Link to={`/edit/${song.slug}`} onClick={() => editSong(song.slug)}>
-							<RiEdit2Fill
-								style={{ paddingLeft: '25px' }}
-								className='fav-btn'
-							/>
-						</Link>
-					) : null}
+					{currentUser && (
+						<>
+							<Link onClick={() => deleteSong(song.slug)}>
+								<MdDelete style={{ paddingLeft: '25px' }} className='fav-btn' />
+							</Link>
+							<Link
+								to={`/edit/${song.slug}`}
+								onClick={() => editSong(song.slug)}
+							>
+								<RiEdit2Fill
+									style={{ paddingLeft: '25px' }}
+									className='fav-btn'
+								/>
+							</Link>
+						</>
+					)}
+				</div>
+				<div className='more-info-desc-etc'>
+					<div className='more-info-desc-etc-topics'>
+						<button
+							className={activeTab === 'description' ? 'active' : ''}
+							onClick={() => setActiveTab('description')}
+						>
+							Description
+						</button>
+						<button
+							className={activeTab === 'lyrics' ? 'active' : ''}
+							onClick={() => setActiveTab('lyrics')}
+						>
+							Lyrics
+						</button>
+					</div>
+					<div className='more-info-desc-etc-itself'>
+						{activeTab === 'description' && <span>{song.description}</span>}
+						{activeTab === 'lyrics' && <span>{song.song_text}</span>}
+					</div>
+				</div>
+				<hr className='listen-to-song-hr' />
+				<div className='other-songs'>
+					<div className='song-list'>
+						{songs
+							.filter(s => s.id !== song.id)
+							.map(s => (
+								<ProductCard key={s.id} elem={s} />
+							))}
+					</div>
 				</div>
 			</div>
-
-			{isPlaying && <FooterMenuSong song={song} />}
+			<FooterMenuSong
+				song={song}
+				isPlaying={isPlaying}
+				setIsPlaying={setIsPlaying}
+				formatTime={formatTime}
+				duration={duration}
+				currentTime={currentTime}
+				handleSliderChange={handleSliderChange}
+				audioRef={audioRef}
+				setCurrentTime={setCurrentTime}
+				setDuration={setDuration}
+				setShowModal={setShowModal}
+			/>
 		</div>
 	)
 }

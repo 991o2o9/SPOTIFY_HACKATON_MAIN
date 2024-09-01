@@ -4,17 +4,18 @@ import n from '../assets/Google__G__logo.svg.webp'
 import mo from '../assets/fb_icon_325x325.png'
 import pol from '../assets/Telegram_2019_Logo.svg.webp'
 import mu from '../assets/1200x630bb.png'
-
 import './Login.css'
 import { useAuth } from '../context/AuthContextProvider'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const Login = () => {
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
+	const [loginError, setLoginError] = useState('') // Состояние для ошибки входа
 	const { handleLogin } = useAuth()
 	const navigate = useNavigate()
-	const handleSave = () => {
+
+	const handleSave = async () => {
 		if (!email.trim() || !password.trim()) {
 			alert('Заполните данные!')
 			return
@@ -22,8 +23,18 @@ const Login = () => {
 		let formData = new FormData()
 		formData.append('email', email)
 		formData.append('password', password)
-		handleLogin(formData, email)
+
+		const success = await handleLogin(formData, email)
+		if (!success) {
+			setLoginError(
+				'Login failed. Please check your credentials and try again.'
+			)
+		} else {
+			setLoginError('')
+			navigate('/') // Перенаправление после успешного входа
+		}
 	}
+
 	return (
 		<div className='login-background'>
 			<header>
@@ -43,12 +54,10 @@ const Login = () => {
 							<img src={mo} alt='Facebook logo' />
 							<span>Login with Facebook</span>
 						</button>
-
 						<button className='social-btn' id='m'>
 							<img src={pol} alt='Telegram logo' />
 							<span>Login with Telegram</span>
 						</button>
-
 						<button className='social-btn' id='t'>
 							<img src={mu} alt='Twitter logo' />
 							<span>Login with Twitter</span>
@@ -70,10 +79,10 @@ const Login = () => {
 								type='password'
 								placeholder='Password'
 							/>
-
 							<button type='button' onClick={handleSave}>
 								Log In
 							</button>
+							{loginError && <p className='error-text'>{loginError}</p>}
 						</form>
 					</div>
 
@@ -81,7 +90,7 @@ const Login = () => {
 
 					<div className='signup-prompt'>
 						<span>Don't have an account?</span>
-						<a href='#'>Sign up for Spotify</a>
+						<Link to={'/login'}>Sign up for Spotify</Link>
 					</div>
 				</div>
 			</section>

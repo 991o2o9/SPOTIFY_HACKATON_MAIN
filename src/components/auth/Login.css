@@ -112,6 +112,7 @@
 	max-width: 324px;
 	letter-spacing: 0.4px;
 	font-size: 16px;
+	border: none;
 	margin: 20px 0;
 }
 
@@ -151,8 +152,13 @@
 	color: white;
 	text-decoration: underline;
 }
+.error-text {
+	width: 229px;
+	color: red;
+	font-size: 13px;
+	margin-top: 10px;
+}
 
-/* Медиа-запросы только для Login компонента */
 @media (max-width: 1024px) {
 	.login-container {
 		padding: 24px;

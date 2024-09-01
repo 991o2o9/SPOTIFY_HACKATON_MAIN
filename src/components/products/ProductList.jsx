@@ -23,12 +23,13 @@ const ProductList = () => {
 	//   useEffect(() => {
 	//     setSearchParams({ page: currentPage });
 	//   }, [currentPage]);
+	console.log(songs)
 	return (
 		<div>
 			<h2 className='zxc-cont'>Songs</h2>
-			<div style={{ display: 'flex', marginLeft: '245px' }}>
-				{songs.map(elem => (
-					<ProductCard elem={elem} />
+			<div className='song-card-container'>
+				{songs.map((elem, index) => (
+					<ProductCard key={index} elem={elem} />
 				))}
 			</div>
 		</div>

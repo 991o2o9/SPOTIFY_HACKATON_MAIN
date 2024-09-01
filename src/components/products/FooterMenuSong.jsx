@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { IoPlaySkipBack, IoPlaySkipForward } from 'react-icons/io5'
 import {
@@ -9,58 +9,35 @@ import {
 	FaPlusCircle,
 } from 'react-icons/fa'
 
-const FooterMenuSong = ({ song }) => {
-	const audioRef = useRef(null)
-	const [isPlaying, setIsPlaying] = useState(false)
-	const [currentTime, setCurrentTime] = useState(0)
-	const [duration, setDuration] = useState(0)
+const FooterMenuSong = ({
+	setShowModal,
+	song,
+	formatTime,
+	duration,
+	currentTime,
+	handleSliderChange,
+	audioRef,
+	setCurrentTime,
+	setDuration,
+	isPlaying,
+	setIsPlaying,
+}) => {
 	const [volume, setVolume] = useState(0.5)
-
-	useEffect(() => {
-		const audio = audioRef.current
-
-		if (audio) {
-			const updateDuration = () => {
-				setDuration(audio.duration)
-			}
-
-			const updateTime = () => {
-				setCurrentTime(audio.currentTime)
-			}
-
-			audio.addEventListener('loadedmetadata', updateDuration)
-			audio.addEventListener('timeupdate', updateTime)
-
-			audio.volume = volume
-
-			return () => {
-				audio.removeEventListener('loadedmetadata', updateDuration)
-				audio.removeEventListener('timeupdate', updateTime)
-			}
-		}
-	}, [audioRef, volume])
-
-	const formatTime = time => {
-		const minutes = Math.floor(time / 60)
-		const seconds = Math.floor(time % 60)
-		return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
-	}
-
+	// ! тест
 	const togglePlayPause = () => {
 		const audio = audioRef.current
-		if (isPlaying) {
-			audio.pause()
+		if (audio) {
+			if (isPlaying) {
+				audio.pause()
+			} else {
+				audio.play()
+			}
+			setIsPlaying(prevState => !prevState)
 		} else {
-			audio.play()
+			console.error('Элемент audio не найден.')
 		}
-		setIsPlaying(prevState => !prevState)
 	}
-
-	const handleSliderChange = event => {
-		const audio = audioRef.current
-		audio.currentTime = Number(event.target.value)
-		setCurrentTime(audio.currentTime)
-	}
+	// ! тест
 
 	const handleVolumeChange = event => {
 		const newVolume = Number(event.target.value)
@@ -70,6 +47,14 @@ const FooterMenuSong = ({ song }) => {
 			audio.volume = newVolume
 		}
 	}
+
+	useEffect(() => {
+		const audio = audioRef.current
+		if (audio) {
+			// Установить начальную громкость
+			audio.volume = volume
+		}
+	}, [audioRef, volume])
 
 	return (
 		<div className='footer-menu-song'>
@@ -86,7 +71,7 @@ const FooterMenuSong = ({ song }) => {
 					</Link>
 				</div>
 				<div className='add-to-fav-list'>
-					<Link to='#'>
+					<Link onClick={() => setShowModal(true)}>
 						<FaPlusCircle />
 					</Link>
 				</div>
@@ -105,7 +90,10 @@ const FooterMenuSong = ({ song }) => {
 
 				<div className='slider-shit'>
 					<div className='time-info'>
-						<span>Длительность - {formatTime(duration)} - </span>
+						<span>
+							Длительность -{' '}
+							{duration ? formatTime(duration) : <span>...</span>} -{' '}
+						</span>
 						<span>{formatTime(currentTime)}</span>
 					</div>
 					<div className='slider-container'>

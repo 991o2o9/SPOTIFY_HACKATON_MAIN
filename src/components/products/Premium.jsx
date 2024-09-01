@@ -4,6 +4,7 @@ import masterCard from '../assets/card (2).png'
 import americanExpress from '../assets/american-express.png'
 import payPal from '../assets/card (3).png'
 import { Check } from '@mui/icons-material'
+import { Link } from 'react-router-dom'
 
 const Premium = () => {
 	return (
@@ -27,7 +28,7 @@ const Premium = () => {
 							fontSize: '1.875rem',
 							fontWeight: 'bold',
 							marginBottom: '1rem',
-							'@media (min-width: 768px)': { fontSize: '2.25rem' },
+							'@media (minWidth: 768px)': { fontSize: '2.25rem' },
 							'@media (min-width: 1280px)': { fontSize: '3rem' },
 							marginLeft: '70px',
 							marginRight: '70px',
@@ -40,7 +41,7 @@ const Premium = () => {
 						style={{
 							fontSize: '1.125rem',
 							marginBottom: '1.5rem',
-							'@media (min-width: 768px)': { fontSize: '1.25rem' },
+							'@media (minWidth: 768px)': { fontSize: '1.25rem' },
 						}}
 					>
 						Затем 4,99 $/месяц. Отменить подписку можно в любой момент.
@@ -55,7 +56,7 @@ const Premium = () => {
 								padding: '0.5rem 1rem',
 								borderRadius: '9999px',
 								fontWeight: '600',
-								'@media (min-width: 768px)': { fontSize: '1.125rem' },
+								'@media (minWidth: 768px)': { fontSize: '1.125rem' },
 								borderStyle: 'solid',
 								cursor: 'pointer',
 							}}
@@ -69,7 +70,7 @@ const Premium = () => {
 								padding: '0.5rem 1rem',
 								borderRadius: '9999px',
 								fontWeight: '600',
-								'@media (min-width: 768px)': { fontSize: '1.125rem' },
+								'@media (minWidth: 768px)': { fontSize: '1.125rem' },
 								cursor: 'pointer',
 							}}
 						>
@@ -80,15 +81,12 @@ const Premium = () => {
 						style={{
 							fontSize: '0.875rem',
 							marginTop: '1.5rem',
-							'@media (min-width: 768px)': { fontSize: '1rem' },
+							'@media (minWidth: 768px)': { fontSize: '1rem' },
 						}}
 					>
 						Бесплатно 1 месяц, затем 4,99 $ в месяц. Только для новых
 						подписчиков. Действуют{' '}
-						<a href='#' style={{ textDecoration: 'underline' }}>
-							Условия
-						</a>
-						.
+						<Link style={{ textDecoration: 'underline' }}>Условия</Link>.
 					</p>
 				</div>
 				<div
@@ -98,7 +96,7 @@ const Premium = () => {
 						paddingTop: '5.5rem',
 						paddingBottom: '3.5rem',
 						marginTop: '2.5rem',
-						'@media (min-width: 768px)': { marginTop: '5rem' },
+						'@media (minWidth: 768px)': { marginTop: '5rem' },
 					}}
 				>
 					<h2
@@ -106,7 +104,7 @@ const Premium = () => {
 							fontSize: '1.5rem',
 							fontWeight: 'bold',
 							marginBottom: '2rem',
-							'@media (min-width: 768px)': { fontSize: '1.875rem' },
+							'@media (minWidth: 768px)': { fontSize: '1.875rem' },
 						}}
 					>
 						Доступные планы под любые потребности
@@ -116,7 +114,7 @@ const Premium = () => {
 							fontSize: '1.125rem',
 							marginBottom: '3rem',
 
-							'@media (min-width: 768px)': { fontSize: '1.25rem' },
+							'': { fontSize: '1.25rem' },
 							marginLeft: '90px',
 							marginRight: '90px',
 						}}
@@ -232,7 +230,7 @@ const Premium = () => {
 						display: 'flex',
 						alignItems: 'center',
 						gap: '1.5rem',
-						'@media (min-width: 1024px)': {
+						'@media (minWidth: 1024px)': {
 							flexDirection: 'row',
 							justifyContent: 'center',
 						},
@@ -247,7 +245,7 @@ const Premium = () => {
 							borderRadius: '0.5rem',
 							width: '100%',
 							height: '420px',
-							'@media (min-width: 1024px)': { width: '33%' },
+							'@media (minWidth: 1024px)': { width: '33%' },
 						}}
 					>
 						<div
@@ -305,10 +303,7 @@ const Premium = () => {
 							>
 								Бесплатно 1 месяц, затем 4,99 $ в месяц. Только для новых
 								подписчиков. Действуют{' '}
-								<a href='#' style={{ textDecoration: 'underline' }}>
-									Условия
-								</a>
-								.
+								<Link style={{ textDecoration: 'underline' }}>Условия</Link>.
 							</p>
 						</div>
 					</div>
@@ -319,7 +314,7 @@ const Premium = () => {
 							borderRadius: '0.5rem',
 							height: '450px',
 							width: '100%',
-							'@media (min-width: 1024px)': { width: '33%' },
+							'@media (minWidth: 1024px)': { width: '33%' },
 						}}
 					>
 						<div
@@ -378,9 +373,9 @@ const Premium = () => {
 							>
 								Бесплатно 1 месяц, затем 2,49 $ в месяц. Только для новых
 								подписчиков, которые учатся в аккредитованных вузах. Действуют{' '}
-								<a href='#' style={{ textDecoration: 'underline' }}>
+								<Link href='#' style={{ textDecoration: 'underline' }}>
 									Условия
-								</a>
+								</Link>
 								.
 							</p>
 						</div>
@@ -392,7 +387,7 @@ const Premium = () => {
 							borderRadius: '0.5rem',
 							height: '420px',
 							width: '100%',
-							'@media (min-width: 1024px)': { width: '33%' },
+							'@media (minWidth: 1024px)': { width: '33%' },
 						}}
 					>
 						<div
@@ -446,9 +441,9 @@ const Premium = () => {
 								}}
 							>
 								Для двух человек, которые живут по одному адресу. Действуют{' '}
-								<a href='#' style={{ textDecoration: 'underline' }}>
+								<Link href='#' style={{ textDecoration: 'underline' }}>
 									Условия
-								</a>
+								</Link>
 								.
 							</p>
 						</div>

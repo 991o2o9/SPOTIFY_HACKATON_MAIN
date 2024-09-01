@@ -4,71 +4,71 @@ import n2 from '../components/assets/twitter.png'
 import n3 from '../components/assets/facebook.png'
 import { Link } from 'react-router-dom'
 
-const Footerrez = () => {
+const FooterrezzForMenu = () => {
 	return (
-		<div className='footer'>
-			<div className='footer-container'>
-				<div className='footer-grid'>
+		<div className='custom-footer'>
+			<div className='custom-footer-container'>
+				<div className='custom-footer-grid'>
 					<div>
-						<h3 className='footer-heading'>Компания</h3>
+						<h3 className='custom-footer-heading'>Компания</h3>
 						<ul>
-							<li className='liFooter'>
+							<li className='custom-li-footer'>
 								<Link to='/about'>О нас</Link>
 							</li>
-							<li className='liFooter'>
+							<li className='custom-li-footer'>
 								<a href='/vacancies'>Вакансии</a>
 							</li>
 						</ul>
 					</div>
 					<div>
-						<h3 className='footer-heading'>Сообщества</h3>
+						<h3 className='custom-footer-heading'>Сообщества</h3>
 						<ul>
-							<li className='liFooter'>
+							<li className='custom-li-footer'>
 								<a href='/artists'>Для исполнителей</a>
 							</li>
-							<li className='liFooter'>
+							<li className='custom-li-footer'>
 								<a href='/developers'>Для разработчиков</a>
 							</li>
-							<li className='liFooter'>
+							<li className='custom-li-footer'>
 								<a href='/advertising'>Реклама</a>
 							</li>
 						</ul>
 					</div>
 					<div>
-						<h3 className='footer-heading'>Полезные ссылки</h3>
+						<h3 className='custom-footer-heading'>Полезные ссылки</h3>
 						<ul>
-							<li className='liFooter'>
+							<li className='custom-li-footer'>
 								<a href='/help'>Справка</a>
 							</li>
-							<li className='liFooter'>
+							<li className='custom-li-footer'>
 								<a href='/mobile-app'>Бесплатное мобильное приложение</a>
 							</li>
 						</ul>
 					</div>
 					<div>
-						<h3 className='footer-heading'>Планы Spotify</h3>
+						<h3 className='custom-footer-heading'>Планы Spotify</h3>
 						<ul>
-							<li className='liFooter'>
+							<li className='custom-li-footer'>
 								<a href='/premium'>Индивидуальная подписка Spotify Premium</a>
 							</li>
-							<li className='liFooter'>
+							<li className='custom-li-footer'>
 								<a href='/student-premium'>Premium для студентов</a>
 							</li>
-							<li className='liFooter'>
+							<li className='custom-li-footer'>
 								<a href='/duo-premium'>Premium для двоих</a>
 							</li>
-							<li className='liFooter'>
+							<li className='custom-li-footer'>
 								<a href='/individual-subscription'>Индивидуальная подписка</a>
 							</li>
-							<li className='liFooter'>
+							<li className='custom-li-footer'>
 								<a href='/free-version'>Бесплатная версия Spotify</a>
 							</li>
 						</ul>
 					</div>
 				</div>
-				<div className='footer-bottom'>
+				<div className='custom-footer-bottom'>
 					<p>&copy; 2024 Spotify AB</p>
-					<div className='footer-icons'>
+					<div className='custom-footer-icons'>
 						<a
 							href='https://www.instagram.com/spotify/'
 							target='_blank'
@@ -97,4 +97,4 @@ const Footerrez = () => {
 	)
 }
 
-export default Footerrez
+export default FooterrezzForMenu

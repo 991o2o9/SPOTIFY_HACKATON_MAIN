@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import instagrammIcon from '../assets/instagram (1).png'
 import facebookIcon from '../assets/facebook.png'
@@ -50,16 +51,16 @@ const About = () => {
 						}}
 					>
 						<li>
-							<a href='#' style={{ color: 'wheat' }}>
+							<Link to='/' style={{ color: 'wheat' }}>
 								Справка
-							</a>
+							</Link>
 							. Ответы на многие вопросы, а также информацию о функциях Spotify
 							можно найти на нашем справочном сайте.
 						</li>
 						<li>
-							<a href='#' style={{ color: 'wheat' }}>
+							<Link to='/' style={{ color: 'wheat' }}>
 								Сообщество
-							</a>
+							</Link>
 							. Попросите совета у опытных пользователей Spotify. Если вы не
 							найдете решение своей проблемы, опубликуйте вопрос, и вам
 							обязательно помогут. Вы также можете вносить идеи по улучшению
@@ -67,9 +68,9 @@ const About = () => {
 							обсуждать музыку с единомышленниками.
 						</li>
 						<li>
-							<a href='#' style={{ color: 'wheat' }}>
+							<Link to='/' style={{ color: 'wheat' }}>
 								Служба поддержки
-							</a>
+							</Link>
 							. Если вы не найдете ответ на свой вопрос самостоятельно,
 							обратитесь в Службу поддержки Spotify.
 						</li>
@@ -84,28 +85,28 @@ const About = () => {
 							marginTop: '1rem',
 							marginLeft: '2rem',
 							listStyleType: 'disc',
-							color: 'whire',
+							color: 'white', // Corrected typo from 'whire' to 'white'
 						}}
 					>
 						<li>
 							Хотите разместить рекламу в Spotify? Посетите{' '}
-							<a href='#' style={{ color: 'wheat' }}>
+							<Link to='/' style={{ color: 'wheat' }}>
 								раздел для рекламодателей
-							</a>
+							</Link>
 							.
 						</li>
 						<li>
 							Вы представитель прессы? Откройте{' '}
-							<a href='#' style={{ color: 'wheat' }}>
+							<Link to='/' style={{ color: 'wheat' }}>
 								раздел для прессы
-							</a>
+							</Link>
 							.
 						</li>
 						<li>
 							Хотите стать частью нашей команды? Перейдите к{' '}
-							<a href='#' style={{ color: 'wheat' }}>
+							<Link to='/' style={{ color: 'wheat' }}>
 								разделу вакансий
-							</a>
+							</Link>
 							.
 						</li>
 					</ul>

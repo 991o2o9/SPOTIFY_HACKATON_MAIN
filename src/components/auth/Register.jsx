@@ -7,13 +7,25 @@ import mu from '../assets/1200x630bb.png'
 import './Register.css'
 import { useAuth } from '../context/AuthContextProvider'
 import { Link, useNavigate } from 'react-router-dom'
+import { IoMdCloseCircle } from 'react-icons/io'
 
 const Register = () => {
-	const { handleRegister } = useAuth()
+	const { handleRegister, checkCode } = useAuth()
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [passwordConfirm, setPasswordConfirm] = useState('')
+	const [activationEmail, setActivationEmail] = useState('')
+	const [code, setCode] = useState('')
 	const navigate = useNavigate()
+	const [showModal, setShowModal] = useState(false) // State for modal visibility
+	const openModal = () => {
+		setShowModal(true)
+	}
+
+	const closeModal = () => {
+		setShowModal(false)
+	}
+
 	const handleSave = () => {
 		if (!email.trim() || !password.trim() || !passwordConfirm.trim()) {
 			alert('Заполните данные!')
@@ -24,6 +36,18 @@ const Register = () => {
 		formData.append('password', password)
 		formData.append('password_confirm', passwordConfirm)
 		handleRegister(formData)
+		openModal()
+	}
+
+	const handleCode = () => {
+		if (!activationEmail.trim() || !code.trim()) {
+			alert('Заполните данные!')
+			return
+		}
+		let formData = new FormData()
+		formData.append('email', activationEmail)
+		formData.append('activation_code', code)
+		checkCode(formData)
 		navigate('/login')
 	}
 
@@ -59,7 +83,6 @@ const Register = () => {
 			<div className='divider-container'>
 				<span className='divider-text'>or</span>
 			</div>
-
 			<div className='social-login'>
 				<button className='social-btn google-btn'>
 					<img src={n} alt='Google' />
@@ -81,11 +104,47 @@ const Register = () => {
 					<span>Register with Twitter</span>
 				</button>
 			</div>
-			<hr />
+			<hr className='register-hr' />
 			<div className='login-prompt'>
 				<span>Already have an account?</span>
 				<Link to={'/login'}> Log in here.</Link>
 			</div>
+
+			{/* Modal */}
+			{showModal && (
+				<div className='modal'>
+					<div className='modal-content'>
+						<div className='activation-code-field'>
+							<div className='close-icon' onClick={closeModal}>
+								<IoMdCloseCircle size={24} />
+							</div>
+							<div className='activation-code-text'>
+								Please enter the code from the email to verify your email
+								address
+							</div>
+							<div className='input-part-activation'>
+								<input
+									type='text'
+									value={activationEmail}
+									onChange={e => setActivationEmail(e.target.value)}
+									placeholder='Email'
+								/>
+								<input
+									type='text'
+									value={code}
+									onChange={e => setCode(e.target.value)}
+									placeholder='Code'
+								/>
+							</div>
+							<div>
+								<button className='btn-act-code' onClick={handleCode}>
+									Confirm
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	)
 }
